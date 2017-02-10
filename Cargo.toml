@@ -1,0 +1,14 @@
+[package]
+authors = ["Brayden Banks <bb010g@gmail.com>"]
+categories = ["encoding"]
+description = "Human-friendly HSL, Rust implementation (revision 4)"
+keywords = ["color", "hpluv", "husl", "hsl", "rgb"]
+license = "MIT"
+name = "hsluv"
+readme = "README.md"
+repository = "https://github.com/bb010g/rust-hsluv.git"
+version = "0.1.0"
+
+[dev-dependencies]
+json = "0.11.5"
+lazy_static = "0.2.2"
