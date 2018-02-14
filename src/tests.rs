@@ -36,39 +36,41 @@ fn snapshot_init(path: &str) -> HashMap<String, ColorValues> {
         let hpluv = &values["hpluv"];
         let hsluv = &values["hsluv"];
 
-        out.insert(color.to_owned(),
-                   ColorValues {
-                       lch: Lch {
-                           lightness: lch[0].as_f64().expect("LCH missing lightness"),
-                           chroma: lch[1].as_f64().expect("LCH missing chroma"),
-                           hue: lch[2].as_f64().expect("LCH missing hue"),
-                       },
-                       luv: Luv {
-                           lightness: luv[0].as_f64().expect("LUV missing lightness"),
-                           u: luv[1].as_f64().expect("LUV missing u"),
-                           v: luv[2].as_f64().expect("LUV missing v"),
-                       },
-                       rgb: Rgb {
-                           red: rgb[0].as_f64().expect("RGB missing red"),
-                           green: rgb[1].as_f64().expect("RGB missing green"),
-                           blue: rgb[2].as_f64().expect("RGB missing blue"),
-                       },
-                       xyz: Xyz {
-                           x: xyz[0].as_f64().expect("XYZ missing X"),
-                           y: xyz[1].as_f64().expect("XYZ missing Y"),
-                           z: xyz[2].as_f64().expect("XYZ missing Z"),
-                       },
-                       hpluv: Hpluv {
-                           hue: hpluv[0].as_f64().expect("HPLuv missing hue"),
-                           saturation: hpluv[1].as_f64().expect("HPLuv missing saturation"),
-                           lightness: hpluv[2].as_f64().expect("HPLuv missing lightness"),
-                       },
-                       hsluv: Hsluv {
-                           hue: hsluv[0].as_f64().expect("HSLuv missing lightness"),
-                           saturation: hsluv[1].as_f64().expect("HSLuv missing lightness"),
-                           lightness: hsluv[2].as_f64().expect("HSLuv missing lightness"),
-                       },
-                   });
+        out.insert(
+            color.to_owned(),
+            ColorValues {
+                lch: Lch {
+                    lightness: lch[0].as_f64().expect("LCH missing lightness"),
+                    chroma: lch[1].as_f64().expect("LCH missing chroma"),
+                    hue: lch[2].as_f64().expect("LCH missing hue"),
+                },
+                luv: Luv {
+                    lightness: luv[0].as_f64().expect("LUV missing lightness"),
+                    u: luv[1].as_f64().expect("LUV missing u"),
+                    v: luv[2].as_f64().expect("LUV missing v"),
+                },
+                rgb: Rgb {
+                    red: rgb[0].as_f64().expect("RGB missing red"),
+                    green: rgb[1].as_f64().expect("RGB missing green"),
+                    blue: rgb[2].as_f64().expect("RGB missing blue"),
+                },
+                xyz: Xyz {
+                    x: xyz[0].as_f64().expect("XYZ missing X"),
+                    y: xyz[1].as_f64().expect("XYZ missing Y"),
+                    z: xyz[2].as_f64().expect("XYZ missing Z"),
+                },
+                hpluv: Hpluv {
+                    hue: hpluv[0].as_f64().expect("HPLuv missing hue"),
+                    saturation: hpluv[1].as_f64().expect("HPLuv missing saturation"),
+                    lightness: hpluv[2].as_f64().expect("HPLuv missing lightness"),
+                },
+                hsluv: Hsluv {
+                    hue: hsluv[0].as_f64().expect("HSLuv missing lightness"),
+                    saturation: hsluv[1].as_f64().expect("HSLuv missing lightness"),
+                    lightness: hsluv[2].as_f64().expect("HSLuv missing lightness"),
+                },
+            },
+        );
     }
     out
 }
@@ -79,7 +81,10 @@ fn check_eq(color: &str, format: &'static str, expected: f64, actual: f64) {
     if f64::abs(expected - actual) < MAX_DIFF {
         ()
     } else {
-        panic!(format!("{} {}: expected {}, got {}", color, format, expected, actual))
+        panic!(format!(
+            "{} {}: expected {}, got {}",
+            color, format, expected, actual
+        ))
     }
 }
 
@@ -128,8 +133,18 @@ fn test_lch_to_hsluv() {
     for (color, values) in SNAPSHOT.iter() {
         let hsluv = Hsluv::from(values.lch);
         check_eq(color, "Hsluv.hue", values.hsluv.hue, hsluv.hue);
-        check_eq(color, "Hsluv.saturation", values.hsluv.saturation, hsluv.saturation);
-        check_eq(color, "Hsluv.lightness", values.hsluv.lightness, hsluv.lightness);
+        check_eq(
+            color,
+            "Hsluv.saturation",
+            values.hsluv.saturation,
+            hsluv.saturation,
+        );
+        check_eq(
+            color,
+            "Hsluv.lightness",
+            values.hsluv.lightness,
+            hsluv.lightness,
+        );
     }
 }
 
@@ -138,8 +153,18 @@ fn test_lch_to_hpluv() {
     for (color, values) in SNAPSHOT.iter() {
         let hpluv = Hpluv::from(values.lch);
         check_eq(color, "Hpluv.hue", values.hpluv.hue, hpluv.hue);
-        check_eq(color, "Hpluv.saturation", values.hpluv.saturation, hpluv.saturation);
-        check_eq(color, "Hpluv.lightness", values.hpluv.lightness, hpluv.lightness);
+        check_eq(
+            color,
+            "Hpluv.saturation",
+            values.hpluv.saturation,
+            hpluv.saturation,
+        );
+        check_eq(
+            color,
+            "Hpluv.lightness",
+            values.hpluv.lightness,
+            hpluv.lightness,
+        );
     }
 }
 
