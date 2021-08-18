@@ -1,17 +1,6 @@
-// #![cfg_attr(not(feature = "std"), no_std)]
+#![cfg_attr(not(feature = "std"), no_std)]
 
-// #[cfg(feature = "std")]
-extern crate core;
-#[cfg(test)]
-extern crate json;
-#[cfg(test)]
-#[macro_use]
-extern crate lazy_static;
-// #[cfg(not(feature = "std"))]
-// extern crate m;
-
-// #[cfg(not(feature = "std"))]
-// use m::Float;
+use num_traits::float::Float;
 
 mod spaces;
 pub use spaces::*;
@@ -100,11 +89,11 @@ pub struct Line {
 
 impl Line {
     pub fn distance_from_origin(&self) -> f64 {
-        f64::abs(self.intercept) / f64::sqrt(self.slope * self.slope + 1.0)
+        Float::abs(self.intercept) / Float::sqrt(self.slope * self.slope + 1.0)
     }
 
     pub fn ray_length_until_intersect(&self, theta: f64) -> f64 {
-        self.intercept / (f64::sin(theta) - self.slope * f64::cos(theta))
+        self.intercept / (Float::sin(theta) - self.slope * Float::cos(theta))
     }
 }
 
@@ -112,7 +101,7 @@ pub fn max_safe_chroma_for_lightness(lightness: f64) -> f64 {
     get_bounds(lightness)
         .iter()
         .map(Line::distance_from_origin)
-        .fold(core::f64::MAX, f64::min)
+        .fold(f64::MAX, f64::min)
 }
 
 pub fn max_chroma_for_lightness_hue(lightness: f64, hue: f64) -> f64 {
@@ -123,7 +112,7 @@ pub fn max_chroma_for_lightness_hue(lightness: f64, hue: f64) -> f64 {
         .iter()
         .map(|l| l.ray_length_until_intersect(hue_rad))
         .filter(|length| length >= &0.0)
-        .fold(core::f64::MAX, f64::min)
+        .fold(f64::MAX, f64::min)
 }
 
 fn dot_product<T, U, V>(lhs: (T, T, T), rhs: (U, U, U)) -> V
@@ -140,7 +129,7 @@ impl From<Xyz> for Rgb {
             if c <= 0.0031308 {
                 12.92 * c
             } else {
-                1.055 * f64::powf(c, 1.0 / 2.4) - 0.055
+                1.055 * Float::powf(c, 1.0 / 2.4) - 0.055
             }
         }
 
@@ -157,7 +146,7 @@ impl From<Rgb> for Xyz {
     fn from(rgb: Rgb) -> Xyz {
         fn to_linear(c: f64) -> f64 {
             if c > 0.04045 {
-                f64::powf((c + 0.055) / 1.055, 2.4)
+                Float::powf((c + 0.055) / 1.055, 2.4)
             } else {
                 c / 12.92
             }
@@ -180,7 +169,7 @@ pub fn y_to_lightness(y: f64) -> f64 {
     if y <= EPSILON {
         y * KAPPA
     } else {
-        116.0 * f64::cbrt(y) - 16.0
+        116.0 * Float::cbrt(y) - 16.0
     }
 }
 
@@ -240,7 +229,7 @@ impl From<Luv> for Xyz {
 
 impl From<Luv> for Lch {
     fn from(luv: Luv) -> Lch {
-        let chroma = f64::sqrt(luv.u * luv.u + luv.v * luv.v);
+        let chroma = Float::sqrt(luv.u * luv.u + luv.v * luv.v);
 
         Lch {
             lightness: luv.lightness,
@@ -249,7 +238,7 @@ impl From<Luv> for Lch {
                 0.0
             } else {
                 // (180 / pi)
-                match f64::atan2(luv.v, luv.u) * 57.29577951308232087680 {
+                match Float::atan2(luv.v, luv.u) * 57.29577951308232087680 {
                     hue if hue < 0.0 => hue + 360.0,
                     hue => hue,
                 }
@@ -265,8 +254,8 @@ impl From<Lch> for Luv {
 
         Luv {
             lightness: lch.lightness,
-            u: f64::cos(hue_rad) * lch.chroma,
-            v: f64::sin(hue_rad) * lch.chroma,
+            u: Float::cos(hue_rad) * lch.chroma,
+            v: Float::sin(hue_rad) * lch.chroma,
         }
     }
 }
@@ -377,14 +366,16 @@ pub fn hsluv_to_rgb(hue: f64, saturation: f64, lightness: f64) -> (f64, f64, f64
         hue,
         saturation,
         lightness,
-    }).rgb()
+    })
+    .rgb()
 }
 pub fn hpluv_to_rgb(hue: f64, saturation: f64, lightness: f64) -> (f64, f64, f64) {
     Rgb::from(Hpluv {
         hue,
         saturation,
         lightness,
-    }).rgb()
+    })
+    .rgb()
 }
 pub fn rgb_to_hsluv(red: f64, green: f64, blue: f64) -> (f64, f64, f64) {
     Hsluv::from(Rgb { red, green, blue }).hsl()

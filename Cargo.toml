@@ -1,18 +1,28 @@
 [package]
-authors = ["Brayden Banks <bb010g@gmail.com>"]
-categories = ["encoding"]
+authors = ["Dusk Banks <me@bb010g.com>"]
+categories = ["encoding", "no-std"]
 description = "Human-friendly HSL (revision 4)"
+edition = "2018"
 keywords = ["color", "husl", "hsl", "luv", "rgb"]
 license = "MIT"
 name = "hsluv"
 readme = "README.md"
 repository = "https://github.com/bb010g/rust-hsluv.git"
-version = "0.2.0"
-exclude = ["snapshot*.json"]
+version = "0.3.0"
 
-[dev-dependencies]
+[package.metadata.docs.rs]
+features = ["std"]
+
+[dependencies]
+num-traits = { version = "0.2.14", default-features = false }
+
+[build-dependencies]
 json = "0.11.13"
-lazy_static = "1.0.0"
 
-[badges]
-travis-ci = { repository = "https://github.com/bb010g/rust-hsluv.git" }
+[features]
+alloc = []
+default = ["std"]
+libm = ["num-traits/libm"]
+std = ["alloc", "num-traits/std"]
+
+[lib]

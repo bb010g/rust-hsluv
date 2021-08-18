@@ -1,7 +1,4 @@
 use super::*;
-use std::collections::HashMap;
-use std::fs::File;
-use std::io::Read;
 
 #[derive(Debug, Clone)]
 struct ColorValues {
@@ -13,78 +10,18 @@ struct ColorValues {
     hsluv: Hsluv,
 }
 
-lazy_static! {
-    static ref SNAPSHOT: HashMap<String, ColorValues> = snapshot_init("snapshot-rev4.json");
-}
-
-fn snapshot_init(path: &str) -> HashMap<String, ColorValues> {
-    let mut s = String::new();
-    File::open(path)
-        .expect("Snapshot file not present")
-        .read_to_string(&mut s)
-        .expect("Can't record snapshot file");
-    let json = json::parse(&s).expect("Can't parse snapshot");
-    if !json.is_object() {
-        panic!("Snapshot isn't an object");
-    }
-    let mut out = HashMap::new();
-    for (color, values) in json.entries() {
-        let lch = &values["lch"];
-        let luv = &values["luv"];
-        let rgb = &values["rgb"];
-        let xyz = &values["xyz"];
-        let hpluv = &values["hpluv"];
-        let hsluv = &values["hsluv"];
-
-        out.insert(
-            color.to_owned(),
-            ColorValues {
-                lch: Lch {
-                    lightness: lch[0].as_f64().expect("LCH missing lightness"),
-                    chroma: lch[1].as_f64().expect("LCH missing chroma"),
-                    hue: lch[2].as_f64().expect("LCH missing hue"),
-                },
-                luv: Luv {
-                    lightness: luv[0].as_f64().expect("LUV missing lightness"),
-                    u: luv[1].as_f64().expect("LUV missing u"),
-                    v: luv[2].as_f64().expect("LUV missing v"),
-                },
-                rgb: Rgb {
-                    red: rgb[0].as_f64().expect("RGB missing red"),
-                    green: rgb[1].as_f64().expect("RGB missing green"),
-                    blue: rgb[2].as_f64().expect("RGB missing blue"),
-                },
-                xyz: Xyz {
-                    x: xyz[0].as_f64().expect("XYZ missing X"),
-                    y: xyz[1].as_f64().expect("XYZ missing Y"),
-                    z: xyz[2].as_f64().expect("XYZ missing Z"),
-                },
-                hpluv: Hpluv {
-                    hue: hpluv[0].as_f64().expect("HPLuv missing hue"),
-                    saturation: hpluv[1].as_f64().expect("HPLuv missing saturation"),
-                    lightness: hpluv[2].as_f64().expect("HPLuv missing lightness"),
-                },
-                hsluv: Hsluv {
-                    hue: hsluv[0].as_f64().expect("HSLuv missing lightness"),
-                    saturation: hsluv[1].as_f64().expect("HSLuv missing lightness"),
-                    lightness: hsluv[2].as_f64().expect("HSLuv missing lightness"),
-                },
-            },
-        );
-    }
-    out
-}
+include!(concat!(env!("OUT_DIR"), "/snapshot-rev4.rs"));
 
 const MAX_DIFF: f64 = 0.00000001;
 
 fn check_eq(color: &str, format: &'static str, expected: f64, actual: f64) {
-    if f64::abs(expected - actual) < MAX_DIFF {
+    if Float::abs(expected - actual) < MAX_DIFF {
         ()
     } else {
-        panic!(format!(
+        panic!(
             "{} {}: expected {}, got {}",
             color, format, expected, actual
-        ))
+        )
     }
 }
 
