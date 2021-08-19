@@ -23,7 +23,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let mut out = String::new();
 
-    out.push_str("static SNAPSHOT: &'static [(&'static str, ColorValues)] = &[\n");
+    out.push_str("static SNAPSHOT: &[(&str, ColorValues)] = &[\n");
     for (color, values) in json.entries() {
         let lch = &values["lch"];
         let luv = &values["luv"];

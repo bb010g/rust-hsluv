@@ -15,9 +15,7 @@ include!(concat!(env!("OUT_DIR"), "/snapshot-rev4.rs"));
 const MAX_DIFF: f64 = 0.00000001;
 
 fn check_eq(color: &str, format: &'static str, expected: f64, actual: f64) {
-    if Float::abs(expected - actual) < MAX_DIFF {
-        ()
-    } else {
+    if Float::abs(expected - actual) >= MAX_DIFF {
         panic!(
             "{} {}: expected {}, got {}",
             color, format, expected, actual
