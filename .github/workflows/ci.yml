@@ -24,6 +24,8 @@ jobs:
         components: clippy
     - name: Run tests
       run: cargo test --all-targets
+    - name: Run tests (no_std, libm)
+      run: cargo test --all-targets --no-default-features --features libm
     - name: Check Clippy
       run: cargo clippy --all-targets -- -D warnings
   rustfmt:

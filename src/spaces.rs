@@ -13,11 +13,11 @@ pub struct Rgb {
 }
 impl Rgb {
     pub fn new(red: f64, green: f64, blue: f64) -> Result<Rgb, RgbBounds> {
-        if red < 0.0 || red > 1.0 {
+        if !(0.0..=1.0).contains(&red) {
             Err(RgbBounds::Red)
-        } else if green < 0.0 || green > 1.0 {
+        } else if !(0.0..=1.0).contains(&green) {
             Err(RgbBounds::Green)
-        } else if blue < 0.0 || blue > 1.0 {
+        } else if !(0.0..=1.0).contains(&blue) {
             Err(RgbBounds::Blue)
         } else {
             Ok(Rgb { red, green, blue })
@@ -44,11 +44,11 @@ pub struct Hsluv {
 }
 impl Hsluv {
     pub fn new(hue: f64, saturation: f64, lightness: f64) -> Result<Hsluv, HslBounds> {
-        if hue < 0.0 || hue > 360.0 {
+        if !(0.0..=360.0).contains(&hue) {
             Err(HslBounds::Hue)
-        } else if saturation < 0.0 || saturation > 100.0 {
+        } else if !(0.0..=100.0).contains(&saturation) {
             Err(HslBounds::Saturation)
-        } else if lightness < 0.0 || saturation > 100.0 {
+        } else if !(0.0..=100.0).contains(&lightness) {
             Err(HslBounds::Lightness)
         } else {
             Ok(Hsluv {
@@ -72,11 +72,11 @@ pub struct Hpluv {
 }
 impl Hpluv {
     pub fn new(hue: f64, saturation: f64, lightness: f64) -> Result<Hpluv, HslBounds> {
-        if hue < 0.0 || hue > 360.0 {
+        if !(0.0..=360.0).contains(&hue) {
             Err(HslBounds::Hue)
-        } else if saturation < 0.0 || saturation > 100.0 {
+        } else if !(0.0..=100.0).contains(&saturation) {
             Err(HslBounds::Saturation)
-        } else if lightness < 0.0 || saturation > 100.0 {
+        } else if !(0.0..=100.0).contains(&lightness) {
             Err(HslBounds::Lightness)
         } else {
             Ok(Hpluv {
@@ -108,11 +108,11 @@ pub struct Xyz {
 
 impl Xyz {
     pub fn new(x: f64, y: f64, z: f64) -> Result<Xyz, XyzBounds> {
-        if x < 0.0 || x > 1.0 {
+        if !(0.0..=1.0).contains(&x) {
             Err(XyzBounds::X)
-        } else if y < 0.0 || y > 1.0 {
+        } else if !(0.0..=1.0).contains(&y) {
             Err(XyzBounds::Y)
-        } else if z < 0.0 || z > 1.0 {
+        } else if !(0.0..=1.0).contains(&z) {
             Err(XyzBounds::Z)
         } else {
             Ok(Xyz { x, y, z })

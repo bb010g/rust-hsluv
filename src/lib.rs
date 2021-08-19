@@ -1,4 +1,5 @@
 #![cfg_attr(not(feature = "std"), no_std)]
+#![allow(clippy::excessive_precision)]
 
 use num_traits::float::Float;
 
@@ -233,7 +234,7 @@ impl From<Luv> for Lch {
 
         Lch {
             lightness: luv.lightness,
-            chroma: chroma,
+            chroma,
             hue: if chroma < 0.00000001 {
                 0.0
             } else {
