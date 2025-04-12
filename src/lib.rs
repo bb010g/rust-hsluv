@@ -1,3 +1,18 @@
+//! # HSLuv and HPLuv implementation.
+//!
+//! This crate primarily implements conversion between the RGB, HSLuv and
+//! HPLuv color spaces.
+//!
+//! It also supports the XYZ, Lch and Luv color spaces, though those are
+//! primarily used as intermediate steps for conversion.
+//!
+//! Conversions between color spaces are implemented via [`From`] and
+//! [`Into`]. The core operations are also available as functions:
+//!
+//! - [`hsluv_to_rgb`]: Convert HSLuv to RGB.
+//! - [`hpluv_to_rgb`]: Convert HPLuv to RGB.
+//! - [`rgb_to_hsluv`]: Convert RGB to HSLuv.
+//! - [`rgb_to_hpluv`]: Convert RGB to HPLuv.
 #![cfg_attr(not(feature = "std"), no_std)]
 #![allow(clippy::excessive_precision)]
 
@@ -362,6 +377,13 @@ impl From<Rgb> for Hpluv {
     }
 }
 
+/// Convert a HSLuv point to RGB.
+///
+/// `hue` must be between 0.0 and 360.0 (inclusive) and `saturation` and
+/// `lightness` must be between 0.0 and 100.0 (inclusive).
+///
+/// Returns the resulting RGB value as floats from 0.0 to 1.0 (inclusive)
+/// each.
 pub fn hsluv_to_rgb(hue: f64, saturation: f64, lightness: f64) -> (f64, f64, f64) {
     Rgb::from(Hsluv {
         hue,
@@ -370,6 +392,14 @@ pub fn hsluv_to_rgb(hue: f64, saturation: f64, lightness: f64) -> (f64, f64, f64
     })
     .rgb()
 }
+
+/// Convert a HPLuv point to RGB.
+///
+/// `hue` must be between 0.0 and 360.0 (inclusive) and `saturation` and
+/// `lightness` must be between 0.0 and 100.0 (inclusive).
+///
+/// Returns the resulting RGB value as floats from 0.0 to 1.0 (inclusive)
+/// each.
 pub fn hpluv_to_rgb(hue: f64, saturation: f64, lightness: f64) -> (f64, f64, f64) {
     Rgb::from(Hpluv {
         hue,
@@ -378,9 +408,23 @@ pub fn hpluv_to_rgb(hue: f64, saturation: f64, lightness: f64) -> (f64, f64, f64
     })
     .rgb()
 }
+
+/// Convert an RGB triplet to HSLuv.
+///
+/// `red`, `green` and `blue` must be between 0.0 and 1.0 (inclusive) each.
+///
+/// Returns the hue (0.0 to 360.0 (inclusive)), saturation
+/// (0.0 to 100.0 (inclusive)) and value (0.0 to 100.0 (inclusive)).
 pub fn rgb_to_hsluv(red: f64, green: f64, blue: f64) -> (f64, f64, f64) {
     Hsluv::from(Rgb { red, green, blue }).hsl()
 }
+
+/// Convert an RGB triplet to HPLuv.
+///
+/// `red`, `green` and `blue` must be between 0.0 and 1.0 (inclusive) each.
+///
+/// Returns the hue (0.0 to 360.0 (inclusive)), saturation
+/// (0.0 to 100.0 (inclusive)) and value (0.0 to 100.0 (inclusive)).
 pub fn rgb_to_hpluv(red: f64, green: f64, blue: f64) -> (f64, f64, f64) {
     Hpluv::from(Rgb { red, green, blue }).hsl()
 }
